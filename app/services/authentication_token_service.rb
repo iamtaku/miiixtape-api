@@ -1,3 +1,5 @@
+require 'jwt'
+
 class AuthenticationTokenService
   HMAC_SECRET = ENV['HASH_SECRET']
   ALGORITHM_TYPE = ENV['ALGORITHM_TYPE']
@@ -8,7 +10,11 @@ class AuthenticationTokenService
 
   def self.decode(token)
     p token.inspect
-    decoded_token = JWT.decode token, HMAC_SECRET, true, { algorithm: ALGORITHM_TYPE }
+    decoded_token =
+      JWT.decode token, HMAC_SECRET, true, { algorithm: ALGORITHM_TYPE }
+
+    # p decoded_token
+    # byebug
     decoded_token[0]['user_id']
   end
 end
