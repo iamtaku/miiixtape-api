@@ -1,6 +1,28 @@
 class Api::V1::UsersController < ApplicationController
   before_action :check_access
+
+  # before_action :fetch_token
   def create
+    user = find_user(fetch_token)
+
+    render json: {
+             token: AuthenticationTokenService.call(user.id),
+             user: {
+               username: user.username,
+               access_token: user.access_token,
+               refresh_token: user.refresh_token
+             }
+           }
+  end
+
+  def index
+    @user = User.find(params[:id])
+    render json: { user: @user }
+  end
+
+  private
+
+  def fetch_token
     options = {
       body: {
         grant_type: 'authorization_code',
@@ -14,43 +36,8 @@ class Api::V1::UsersController < ApplicationController
       HTTParty.post('https://accounts.spotify.com/api/token', options)
 
     # convert response.body to json for assisgnment
-    auth_params = JSON.parse(auth_response.body)
-
-    header = { Authorization: "Bearer #{auth_params['access_token']}" }
-    user_response =
-      HTTParty.get('https://api.spotify.com/v1/me', { headers: header })
-
-    # convert response.body to json for assisgnment
-    user_params = JSON.parse(user_response.body)
-
-    # render json: user_params
-    # Create new user based on response, or find the existing user in database
-    # byebug
-    p user_params
-    @user =
-      User.find_or_create_by(
-        username: user_params['display_name'],
-        # spotify_url: user_params["external_urls"]["spotify"],
-        # href: user_params["href"],
-        # spotify_uri: user_params["uri"])
-        spotify_id: user_params['id']
-      )
-
-    #  render json: {
-    #    user: @user
-    #  }
-    @user.update(access_token:auth_params['access_token'], refresh_token:auth_params['refresh_token'])
-    redirect_to "http://localhost:3001/app/#{@user.id}"
-
-    # json: @user
+    @auth_params = JSON.parse(auth_response.body)
   end
-
-  def index
-    @user = User.find(params[:id])
-    render json: { user: @user }
-  end
-
-  private
 
   def check_access
     if params[:error] == 'access_denied'

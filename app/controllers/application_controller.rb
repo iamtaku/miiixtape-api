@@ -7,9 +7,25 @@ class ApplicationController < ActionController::API
 
   private
 
-  # def user
-  #   @user ||= User.find_by(username: params.require(:username))
-  # end
+  def find_user(auth_params)
+    header = { Authorization: "Bearer #{auth_params['access_token']}" }
+    user_response =
+      HTTParty.get('https://api.spotify.com/v1/me', { headers: header })
+
+    # convert response.body to json for assisgnment
+    user_params = JSON.parse(user_response.body)
+
+    @user =
+      User.find_or_create_by(
+        username: user_params['display_name'],
+        spotify_id: user_params['id']
+      )
+    @user.update(
+      access_token: auth_params['access_token'],
+      refresh_token: auth_params['refresh_token']
+    )
+    @user
+  end
 
   def authenticate_user
     # Authorization: Bearer <token>
