@@ -2,8 +2,6 @@ class Api::V1::UsersController < ApplicationController
   before_action :check_access
 
   def create
-    user = find_user(fetch_token)
-
     render json: {
              token: AuthenticationTokenService.call(user.id),
              user: {
@@ -20,23 +18,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
-
-  def fetch_token
-    options = {
-      body: {
-        grant_type: 'authorization_code',
-        code: params[:code],
-        redirect_uri: ENV['REDIRECT_URI'],
-        client_id: ENV['SPOTIFY_ID'],
-        client_secret: ENV['SPOTIFY_CLIENT_SECRET']
-      }
-    }
-    auth_response =
-      HTTParty.post('https://accounts.spotify.com/api/token', options)
-
-    # convert response.body to json for assisgnment
-    @auth_params = JSON.parse(auth_response.body)
-  end
 
   def check_access
     if params[:error] == 'access_denied'
