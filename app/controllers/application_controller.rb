@@ -14,7 +14,7 @@ class ApplicationController < ActionController::API
 
     # convert response.body to json for assisgnment
     user_params = JSON.parse(user_response.body)
-
+    p user_params
     @user =
       User.find_or_create_by(
         username: user_params['display_name'],

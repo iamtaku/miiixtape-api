@@ -1,7 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :check_access
 
-  # before_action :fetch_token
   def create
     user = find_user(fetch_token)
 
