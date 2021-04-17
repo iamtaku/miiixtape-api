@@ -21,11 +21,7 @@ class Api::V1::UsersController < ApplicationController
 
   def check_access
     if params[:error] == 'access_denied'
-      # render json: {
-      #          error: 'spotify authorization failed'
-      #        },
-      #        status: :unauthorized
-      redirect_to 'http://localhost:3001/error'
+     redirect_to 'http://localhost:3001/error'
     end
   end
 end

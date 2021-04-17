@@ -3,11 +3,11 @@ class User < ApplicationRecord
 
   def self.find_or_create_spotify(params)
     token = SpotifyManager::FetchToken.call(params)
-    user_params = SpotifyManager::FetchUserInfo.call(token)
+    user_info = SpotifyManager::FetchUserInfo.call(token)
     @user =
       User.find_or_create_by(
-        username: user_params['display_name'],
-        spotify_id: user_params['id']
+        username: user_info['display_name'],
+        spotify_id: user_info['id']
       )
     @user.update(
       access_token: token['access_token'],

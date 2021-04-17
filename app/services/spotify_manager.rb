@@ -1,5 +1,5 @@
 module SpotifyManager
-  class GetScope
+  class GetScopeURL
     def self.call
       query_params = {
         client_id: ENV['SPOTIFY_ID'],
@@ -10,8 +10,8 @@ module SpotifyManager
         show_dialog: false
       }
 
-      url = 'https://accounts.spotify.com/authorize/'
-      "#{url}?#{query_params.to_query}"
+      url = 'https://accounts.spotify.com/authorize'
+      "#{url}/?#{query_params.to_query}"
     end
   end
 
@@ -30,7 +30,7 @@ module SpotifyManager
         HTTParty.post('https://accounts.spotify.com/api/token', options)
 
       # convert response.body to json for assisgnment
-      auth_params = JSON.parse(auth_response.body)
+      JSON.parse(auth_response.body)
     end
   end
 
@@ -41,7 +41,7 @@ module SpotifyManager
         HTTParty.get('https://api.spotify.com/v1/me', { headers: header })
 
       # convert response.body to json for assisgnment
-      user_params = JSON.parse(user_response.body)
+      JSON.parse(user_response.body)
     end
   end
 end
