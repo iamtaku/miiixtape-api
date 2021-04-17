@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  has_many :playlists
+  validates :spotify_id, uniqueness: true
+
   private
 
   def self.find_or_create_spotify(params)
