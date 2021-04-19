@@ -10,7 +10,6 @@ class AuthenticationTokenService
   end
 
   def self.decode(token)
-    p token.inspect
     decoded_token =
       JWT.decode token, HMAC_SECRET, true, { algorithm: ALGORITHM_TYPE }
 

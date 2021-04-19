@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :playlist_item do
-    song { "" }
+    song { '' }
     playlist { nil }
   end
 end

@@ -3,6 +3,6 @@ class UserSerializer
 
   attributes :username, :spotify_id, :access_token, :refresh_token
   attribute :id do |user|
-     AuthenticationTokenService.call(user.id)
+    AuthenticationTokenService.call(user.id)
   end
 end

@@ -1,11 +1,19 @@
 class ApplicationController < ActionController::API
   rescue_from JWT::VerificationError,
               JWT::DecodeError,
-              ActiveRecord::RecordNotFound,
               with: :authentication_error
+
+  rescue_from ActionController::ParameterMissing,
+              with: :handle_parameter_missing
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
   include ActionController::HttpAuthentication::Token
 
   private
+
+  def handle_parameter_missing(exception)
+    render json: { error: exception.message }, status: :bad_request
+  end
 
   def user
     @user ||= User.find_or_create_spotify(params)
@@ -21,5 +29,9 @@ class ApplicationController < ActionController::API
 
   def authentication_error
     render status: :unauthorized
+  end
+
+  def not_found
+    render status: :not_found
   end
 end

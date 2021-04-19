@@ -1,0 +1,44 @@
+class Api::V1::PlaylistsController < ApplicationController
+  before_action :authenticate_user
+
+  def index
+    # need user and render all playlists
+    playlists = @user.playlists.all
+    render json: PlaylistSerializer.new(playlists).serializable_hash.to_json
+  end
+
+  def create
+    # byebug
+    playlist = Playlist.new(playlist_params)
+    if playlist.save
+      render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
+             status: :created
+    else
+      render json: {
+               error: playlist.errors.messages
+             },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update
+    # byebug
+    playlist = Playlist.find(params[:id])
+    if playlist.update(playlist_params)
+      render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
+             status: :ok
+    else
+      render json: {
+               error: playlist.errors.messages
+             },
+             status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def playlist_params
+    # byebug
+    params.require(:playlist).permit(:name, :user_id)
+  end
+end

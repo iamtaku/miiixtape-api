@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :song do
-    name { 'test song' }
+    sequence(:name) { |n| "test song #{n}" }
     service { 'spotify' }
   end
 end
