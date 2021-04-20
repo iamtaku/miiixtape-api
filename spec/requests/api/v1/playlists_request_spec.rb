@@ -12,6 +12,7 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
     it 'returns all playlists' do
       3.times { create(:playlist, user: user) }
       get '/api/v1/playlists', headers: headers
+      p JSON.parse(response.body)
 
       expect(response).to have_http_status(:success)
       expect(JSON.parse(response.body)['data'].count).to eq(3)
@@ -22,6 +23,14 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
   end
+
+  # describe 'SHOW /playlists' do
+  #   it 'returns a specific playlist' do
+  #     get "/api/v1/playlists/#{playlist_id}", headers: headers
+  #     expect(response).to have_http_status(:success)
+  #     expect(JSON.parse(response.body)['data'])
+  #   end
+  # end
 
   describe 'POST /playlists' do
     it 'creates new playlists' do
@@ -55,6 +64,14 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
     it 'fails when id is wrong' do
       patch "/api/v1/playlists/#{playlist.id}1", headers: headers
       expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'DELETE /playlists' do
+    it 'deletes a playlist' do
+      delete "/api/v1/playlists/#{playlist.id}", headers: headers
+      expect(response).to have_http_status(:no_content)
+      expect(Playlist.count).to eq(0)
     end
   end
 end

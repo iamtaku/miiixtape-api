@@ -23,7 +23,6 @@ class Api::V1::PlaylistsController < ApplicationController
 
   def update
     # byebug
-    playlist = Playlist.find(params[:id])
     if playlist.update(playlist_params)
       render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
              status: :ok
@@ -35,7 +34,19 @@ class Api::V1::PlaylistsController < ApplicationController
     end
   end
 
+  def destroy
+    if playlist.destroy
+      head :no_content
+    else
+      render json: { error: playlist.errors.messages }, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def playlist
+    @playlist ||= Playlist.find(params[:id])
+  end
 
   def playlist_params
     # byebug
