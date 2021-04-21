@@ -8,11 +8,13 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
   let(:params) { { playlist: { name: name, user_id: user.id } } }
   let(:playlist) { create(:playlist, user: user) }
 
+  # let(:playlist_items) { create(:playlist_items, playlist: playlist, song: song)}
+
   describe 'GET /playlist' do
     it 'returns all playlists' do
       3.times { create(:playlist, user: user) }
       get '/api/v1/playlists', headers: headers
-      p JSON.parse(response.body)
+      JSON.parse(response.body)
 
       expect(response).to have_http_status(:success)
       expect(JSON.parse(response.body)['data'].count).to eq(3)
@@ -24,14 +26,6 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
     end
   end
 
-  # describe 'SHOW /playlists' do
-  #   it 'returns a specific playlist' do
-  #     get "/api/v1/playlists/#{playlist_id}", headers: headers
-  #     expect(response).to have_http_status(:success)
-  #     expect(JSON.parse(response.body)['data'])
-  #   end
-  # end
-
   describe 'POST /playlists' do
     it 'creates new playlists' do
       post '/api/v1/playlists', headers: headers, params: params
@@ -42,6 +36,7 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
         name
       )
     end
+
     it 'fails when parameters are missing' do
       post '/api/v1/playlists', headers: headers
       expect(response).to have_http_status(:bad_request)

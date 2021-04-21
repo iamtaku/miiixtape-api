@@ -8,7 +8,9 @@ Rails
         get '/auth', to: 'auth#create'
         get '/callback', to: 'users#create'
         resources :users, only: [:show]
-        resources :playlists, only: %i[index create update destroy]
+        resources :playlists, only: %i[index create update destroy] do
+          resources :playlist_items, only: %i[create update destroy]
+        end
       end
     end
   end

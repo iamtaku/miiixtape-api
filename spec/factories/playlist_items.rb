@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :playlist_item do
-    song { '' }
-    playlist { nil }
+    # sequence(:song) { |n| "playlist_item#{n}" }
   end
 end

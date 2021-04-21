@@ -38,7 +38,10 @@ class Api::V1::PlaylistsController < ApplicationController
     if playlist.destroy
       head :no_content
     else
-      render json: { error: playlist.errors.messages }, status: :unprocessable_entity
+      render json: {
+               error: playlist.errors.messages
+             },
+             status: :unprocessable_entity
     end
   end
 
@@ -49,7 +52,6 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def playlist_params
-    # byebug
     params.require(:playlist).permit(:name, :user_id)
   end
 end
