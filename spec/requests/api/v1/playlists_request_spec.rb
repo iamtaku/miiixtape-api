@@ -8,8 +8,6 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
   let(:params) { { playlist: { name: name, user_id: user.id } } }
   let(:playlist) { create(:playlist, user: user) }
 
-  # let(:playlist_items) { create(:playlist_items, playlist: playlist, song: song)}
-
   describe 'GET /playlist' do
     it 'returns all playlists' do
       3.times { create(:playlist, user: user) }
@@ -64,9 +62,17 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
 
   describe 'DELETE /playlists' do
     it 'deletes a playlist' do
+      PlaylistItem.create!(playlist: playlist, song: create(:song))
       delete "/api/v1/playlists/#{playlist.id}", headers: headers
       expect(response).to have_http_status(:no_content)
       expect(Playlist.count).to eq(0)
+    end
+
+    it 'should fail when unauthorized' do
+      new_user = create(:user)
+      new_playlist = create(:playlist, user: new_user)
+      delete "/api/v1/playlists/#{new_playlist.id}", headers: headers
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user do
-    username { 'test1' }
-    spotify_id { 'spotify_id_1' }
+    sequence(:username) { |n| "user_name_#{n}" }
+    sequence(:spotify_id) { |n| "spotify_id_#{n}" }
   end
 end

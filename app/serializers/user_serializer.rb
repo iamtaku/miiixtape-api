@@ -5,4 +5,5 @@ class UserSerializer
   attribute :id do |user|
     AuthenticationTokenService.call(user.id)
   end
+  has_many :playlists
 end

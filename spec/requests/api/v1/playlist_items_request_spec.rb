@@ -28,7 +28,18 @@ RSpec.describe 'Api::V1::PlaylistItems', type: :request do
   end
 
   describe 'PATCH /items' do
-    it 'updates a playlist item' do
+    it 'updates a playlist item position' do
+      3.times do
+        create(:playlist_item, playlist: playlist, song: create(:song))
+      end
+      patch_params = { playlist_items: { position: 1 } }
+      target = PlaylistItem.last
+      patch "/api/v1/playlist_items/#{target.id}",
+            headers: headers,
+            params: patch_params
+      expect(response).to have_http_status(:ok)
+      expect(json['data']['attributes']['position']).to eq(1)
+      expect(playlist.songs.first).to eq(target.song)
     end
   end
 
@@ -37,6 +48,17 @@ RSpec.describe 'Api::V1::PlaylistItems', type: :request do
       delete "/api/v1/playlist_items/#{playlist_item.id}", headers: headers
       expect(response).to have_http_status(:no_content)
       expect(PlaylistItem.count).to eq(0)
+    end
+
+    it 'should fail when user is not authorized' do
+      new_user = create(:user)
+      new_headers = {
+        'Authorization' =>
+          "Bearer #{AuthenticationTokenService.call(new_user.id)}"
+      }
+      delete "/api/v1/playlist_items/#{playlist_item.id}", headers: new_headers
+
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

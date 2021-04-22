@@ -1,5 +1,6 @@
 class Api::V1::PlaylistsController < ApplicationController
   before_action :authenticate_user
+  before_action :authorize_user, only: %i[update destroy]
 
   def index
     # need user and render all playlists
@@ -46,6 +47,10 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   private
+
+  def authorize_user
+    return authentication_error unless playlist.user == @user
+  end
 
   def playlist
     @playlist ||= Playlist.find(params[:id])
