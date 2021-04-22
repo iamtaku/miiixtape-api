@@ -28,7 +28,18 @@ RSpec.describe 'Api::V1::PlaylistItems', type: :request do
   end
 
   describe 'PATCH /items' do
-    it 'updates a playlist item' do
+    it 'updates a playlist item position' do
+      3.times do
+        create(:playlist_item, playlist: playlist, song: create(:song))
+      end
+      patch_params = { playlist_items: { position: 1 } }
+      target = PlaylistItem.last
+      patch "/api/v1/playlist_items/#{target.id}",
+            headers: headers,
+            params: patch_params
+      expect(response).to have_http_status(:ok)
+      expect(json['data']['attributes']['position']).to eq(1)
+      expect(playlist.songs.first).to eq(target.song)
     end
   end
 
