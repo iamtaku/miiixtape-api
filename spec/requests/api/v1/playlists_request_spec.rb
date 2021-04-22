@@ -8,8 +8,6 @@ RSpec.describe 'Api::V1::Playlists', type: :request do
   let(:params) { { playlist: { name: name, user_id: user.id } } }
   let(:playlist) { create(:playlist, user: user) }
 
-  # let(:playlist_items) { create(:playlist_items, playlist: playlist, song: song)}
-
   describe 'GET /playlist' do
     it 'returns all playlists' do
       3.times { create(:playlist, user: user) }

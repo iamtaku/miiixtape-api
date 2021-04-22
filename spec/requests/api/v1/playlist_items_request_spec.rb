@@ -38,5 +38,16 @@ RSpec.describe 'Api::V1::PlaylistItems', type: :request do
       expect(response).to have_http_status(:no_content)
       expect(PlaylistItem.count).to eq(0)
     end
+
+    it 'should fail when user is not authorized' do
+      new_user = create(:user)
+      new_headers = {
+        'Authorization' =>
+          "Bearer #{AuthenticationTokenService.call(new_user.id)}"
+      }
+      delete "/api/v1/playlist_items/#{playlist_item.id}", headers: new_headers
+
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 end

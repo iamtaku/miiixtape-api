@@ -12,6 +12,8 @@ class Api::V1::PlaylistItemsController < ApplicationController
   end
 
   def destroy
+    return authentication_error unless playlist_item.playlist.user == @user
+
     if playlist_item.destroy
       head :no_content
     else
