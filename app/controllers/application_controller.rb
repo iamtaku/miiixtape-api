@@ -16,6 +16,7 @@ class ApplicationController < ActionController::API
   end
 
   def user
+    byebug
     @user ||= User.find_or_create_spotify(params)
   end
 
@@ -23,7 +24,6 @@ class ApplicationController < ActionController::API
     # Authorization: Bearer <token>
     token, _options = token_and_options(request)
     user_id = AuthenticationTokenService.decode(token)
-
     @user = User.find(user_id)
   end
 

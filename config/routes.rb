@@ -7,7 +7,7 @@ Rails
       namespace :v1 do
         get '/auth', to: 'auth#create'
         get '/callback', to: 'users#create'
-        resources :users, only: [:show]
+        resources :users, only: [:index]
         resources :playlists, only: %i[index create update destroy] do
           resources :playlist_items, only: %i[create]
         end

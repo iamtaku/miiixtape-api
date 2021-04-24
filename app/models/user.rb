@@ -2,6 +2,10 @@ class User < ApplicationRecord
   has_many :playlists
   validates :spotify_id, uniqueness: true
 
+  def token_expired?
+    (Time.now - updated_at) > 3300
+  end
+
   private
 
   def self.find_or_create_spotify(params)

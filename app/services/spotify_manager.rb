@@ -44,4 +44,21 @@ module SpotifyManager
       JSON.parse(user_response.body)
     end
   end
+
+  class RefreshToken
+    def self.call(refresh_token)
+      options = {
+        body: {
+          grant_type: 'refresh_token',
+          refresh_token: refresh_token,
+          client_id: ENV['SPOTIFY_ID'],
+          client_secret: ENV['SPOTIFY_CLIENT_SECRET']
+        }
+      }
+
+      auth_response =
+        HTTParty.post('https://accounts.spotify.com/api/token', options)
+      JSON.parse(auth_response.body)['access_token']
+    end
+  end
 end

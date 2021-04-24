@@ -9,13 +9,12 @@ name: Ruby
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     services:
@@ -34,7 +33,7 @@ jobs:
         with:
           ruby-version: 2.6
           bundler-cache: true
-          
+
       - name: Setup cache key and directory for gems cache
         uses: actions/cache@v1
         with:
