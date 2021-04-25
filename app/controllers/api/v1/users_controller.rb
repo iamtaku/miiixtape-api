@@ -4,10 +4,11 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     # render jwt is successfull
-    render json: { token: AuthenticationTokenService.call(user.id) }
+    render json: { token: AuthenticationTokenService.call(current_user.id) }
   end
 
   def index
+    # byebug
     # render spotify tokens for user if valid jwt
     if @user.token_expired?
       token = SpotifyManager::RefreshToken.call(@user.refresh_token)

@@ -15,9 +15,9 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :bad_request
   end
 
-  def user
+  def current_user
     byebug
-    @user ||= User.find_or_create_spotify(params)
+    @current_user ||= User.find_or_create_spotify(params)
   end
 
   def authenticate_user
