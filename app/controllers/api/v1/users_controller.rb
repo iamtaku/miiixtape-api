@@ -3,7 +3,6 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user, only: [:index]
 
   def create
-    # render jwt is successfull
     render json: { token: AuthenticationTokenService.call(current_user.id) }
   end
 
@@ -19,11 +18,24 @@ class Api::V1::UsersController < ApplicationController
            status: :ok
   end
 
+  def show
+    if @user.token_expired?
+      token = SpotifyManager::RefreshToken.call(@user.refresh_token)
+      @user.update(access_token: token)
+    end
+
+    options = {}
+    options[:include] = [:playlists]
+
+    render json: UserSerializer.new(@user, options).serializable_hash.to_json,
+           status: :ok
+  end
+
   private
 
   def check_access
-    if params[:error] == 'access_denied'
-      redirect_to 'http://localhost:3001/error'
+    if params[:error] == "access_denied"
+      redirect_to "http://localhost:3001/error"
     end
   end
 end
