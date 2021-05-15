@@ -13,7 +13,6 @@ class Api::V1::UsersController < ApplicationController
       token = SpotifyManager::RefreshToken.call(@user.refresh_token)
       @user.update(access_token: token)
     end
-
     render json: UserSerializer.new(@user).serializable_hash.to_json,
            status: :ok
   end
@@ -24,10 +23,7 @@ class Api::V1::UsersController < ApplicationController
       @user.update(access_token: token)
     end
 
-    options = {}
-    options[:include] = [:playlists]
-
-    render json: UserSerializer.new(@user, options).serializable_hash.to_json,
+    render json: UserSerializer.new(@user).serializable_hash.to_json,
            status: :ok
   end
 
