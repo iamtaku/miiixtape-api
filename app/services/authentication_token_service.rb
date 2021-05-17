@@ -12,9 +12,6 @@ class AuthenticationTokenService
   def self.decode(token)
     decoded_token =
       JWT.decode token, HMAC_SECRET, true, { algorithm: ALGORITHM_TYPE }
-
-    # p decoded_token
-    # byebug
     decoded_token[0]['user_id']
   end
 end

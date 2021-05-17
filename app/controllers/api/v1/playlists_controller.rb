@@ -8,6 +8,13 @@ class Api::V1::PlaylistsController < ApplicationController
     render json: PlaylistSerializer.new(playlists).serializable_hash.to_json
   end
 
+  def show
+    options = {}
+    options[:include] = [:songs, :playlist_items]
+
+    render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
+  end
+
   def create
     # byebug
     playlist = Playlist.new(playlist_params)
@@ -16,7 +23,7 @@ class Api::V1::PlaylistsController < ApplicationController
              status: :created
     else
       render json: {
-               error: playlist.errors.messages
+               error: playlist.errors.messages,
              },
              status: :unprocessable_entity
     end
@@ -29,7 +36,7 @@ class Api::V1::PlaylistsController < ApplicationController
              status: :ok
     else
       render json: {
-               error: playlist.errors.messages
+               error: playlist.errors.messages,
              },
              status: :unprocessable_entity
     end
@@ -40,7 +47,7 @@ class Api::V1::PlaylistsController < ApplicationController
       head :no_content
     else
       render json: {
-               error: playlist.errors.messages
+               error: playlist.errors.messages,
              },
              status: :unprocessable_entity
     end
