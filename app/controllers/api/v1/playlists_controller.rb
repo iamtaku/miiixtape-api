@@ -18,6 +18,7 @@ class Api::V1::PlaylistsController < ApplicationController
   def create
     # byebug
     playlist = Playlist.new(playlist_params)
+    playlist.user = @user
     if playlist.save
       render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
              status: :created
@@ -64,6 +65,6 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def playlist_params
-    params.require(:playlist).permit(:name, :user_id)
+    params.require(:playlist).permit(:name)
   end
 end
