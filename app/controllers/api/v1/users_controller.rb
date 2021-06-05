@@ -8,7 +8,6 @@ class Api::V1::UsersController < ApplicationController
 
   def index
     # byebug
-    # render spotify tokens for user if valid jwt
     if @user.token_expired?
       token = SpotifyManager::RefreshToken.call(@user.refresh_token)
       @user.update(access_token: token)

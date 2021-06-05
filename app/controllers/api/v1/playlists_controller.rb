@@ -10,7 +10,7 @@ class Api::V1::PlaylistsController < ApplicationController
 
   def show
     options = {}
-    options[:include] = [:songs, :playlist_items]
+    options[:include] = [:playlist_items]
 
     render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
   end
