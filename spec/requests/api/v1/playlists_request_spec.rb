@@ -8,7 +8,7 @@ RSpec.describe "Api::V1::Playlists", type: :request do
   let(:params) { { playlist: { name: name, user_id: user.id } } }
   let(:playlist) { create(:playlist, user: user) }
 
-  describe "GET /playlist" do
+  describe "GET /playlists" do
     it "returns all playlists" do
       3.times { create(:playlist, user: user) }
       get "/api/v1/playlists", headers: headers
@@ -21,6 +21,14 @@ RSpec.describe "Api::V1::Playlists", type: :request do
     it "fails when no headers" do
       get "/api/v1/playlists"
       expect(response).to have_http_status(:unauthorized)
+    end
+  end
+  
+  describe "GET /playlist" do
+    it 'returns a single playlist'  do
+      create(:playlist, user: user)
+      get "/api/v1/playlists/#{playlist.id}"
+      expect(response).to have_http_status(:success)
     end
   end
 

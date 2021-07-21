@@ -1,24 +1,20 @@
 class Api::V1::PlaylistsController < ApplicationController
-  before_action :authenticate_user
-  before_action :authorize_user, only: %i[update destroy]
+  # before_action :pundit_user, only: %i[index destroy create]
 
   def index
-    # need user and render all playlists
-    playlists = @user.playlists.all
-    render json: PlaylistSerializer.new(playlists).serializable_hash.to_json
+    @playlists = current_user.playlists.all
+    render json: PlaylistSerializer.new(@playlists).serializable_hash.to_json
   end
 
   def show
     options = {}
     options[:include] = [:playlist_items]
-
     render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
   end
 
   def create
-    # byebug
     playlist = Playlist.new(playlist_params)
-    playlist.user = @user
+    playlist.user = current_user
     if playlist.save
       render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
              status: :created
@@ -31,7 +27,7 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def update
-    # byebug
+    authorize playlist
     if playlist.update(playlist_params)
       render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
              status: :ok
@@ -44,6 +40,7 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def destroy
+    authorize playlist
     if playlist.destroy
       head :no_content
     else
@@ -56,9 +53,6 @@ class Api::V1::PlaylistsController < ApplicationController
 
   private
 
-  def authorize_user
-    return authentication_error unless playlist.user == @user
-  end
 
   def playlist
     @playlist ||= Playlist.find(params[:id])
