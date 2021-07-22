@@ -1,5 +1,5 @@
 class Api::V1::PlaylistsController < ApplicationController
-  # before_action :pundit_user, only: %i[index destroy create]
+  # after_action :skip_authorization, only: :show
 
   def index
     @playlists = current_user.playlists.all

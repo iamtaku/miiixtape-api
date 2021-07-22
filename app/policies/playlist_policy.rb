@@ -8,7 +8,7 @@ class PlaylistPolicy < ApplicationPolicy
     end
 
     def show?
-      false
+      true
     end
     
     def update?

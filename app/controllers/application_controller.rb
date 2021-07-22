@@ -24,6 +24,7 @@ class ApplicationController < ActionController::API
 
   def current_user
     token, _options = token_and_options(request)
+    # return nil if token.nil?
     user_id = AuthenticationTokenService.decode(token)
     @user ||= User.find(user_id)
   end

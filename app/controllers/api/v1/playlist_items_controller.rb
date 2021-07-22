@@ -1,11 +1,7 @@
 class Api::V1::PlaylistItemsController < ApplicationController
   def create
-    #clean up logic for creating playlistItems and songs
-    playlist_items_params[:songs].each do |item|
-      PlaylistItem.create!(song: Song.find_or_create_by_uri(item), playlist: playlist)
-    end
-
-    render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
+    new_playlist = PlaylistItem.create_multiple(playlist_items_params[:songs], playlist)
+    render json: PlaylistSerializer.new(new_playlist).serializable_hash.to_json,
            status: :created
   end
 
