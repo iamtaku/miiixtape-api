@@ -7,7 +7,6 @@ class PlaylistItemPolicy < ApplicationPolicy
     end
 
     def show?
-      # true
       false
     end
     
@@ -17,5 +16,9 @@ class PlaylistItemPolicy < ApplicationPolicy
     
     def destroy?
       user == record.user
+    end
+    
+    def create?
+      record.editable? || user == record.user 
     end
 end

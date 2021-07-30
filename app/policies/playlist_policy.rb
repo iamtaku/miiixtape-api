@@ -12,7 +12,11 @@ class PlaylistPolicy < ApplicationPolicy
     end
     
     def update?
-      record.editable? || user == record.user 
+     user == record.user || record.editable? 
+    end
+    
+    def create?
+      true
     end
     
     def destroy?

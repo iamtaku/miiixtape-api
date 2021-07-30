@@ -2,7 +2,7 @@ class Api::V1::PlaylistsController < ApplicationController
   # after_action :skip_authorization, only: :show
 
   def index
-    @playlists = current_user.playlists.all
+    @playlists = current_user.playlists.all.sort_by(&:created_at)
     render json: PlaylistSerializer.new(@playlists).serializable_hash.to_json
   end
 
@@ -52,11 +52,6 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   private
-
-
-  def playlist
-    @playlist ||= Playlist.find(params[:id])
-  end
 
   def playlist_params
     params.require(:playlist).permit(:name)

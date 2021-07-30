@@ -18,13 +18,26 @@ RSpec.describe "Api::V1::PlaylistItems", type: :request do
           { name: song.name, uri: song.uri, service: song.service }
         end
       params = { playlist_items: { songs: song_params } }
-      puts params
       post "/api/v1/playlists/#{playlist.id}/playlist_items",
            headers: headers,
            params: params
       expect(response).to have_http_status(:created)
       expect(PlaylistItem.count).to eq(5)
       expect(json["data"]["relationships"]["songs"]["data"].count).to eq(5)
+    end
+    
+    it "does not create items when record is not editable" do
+    user2 = create(:user)
+       songs = 5.times.map { create(:song) }
+      song_params =
+        songs.map do |song|
+          { name: song.name, uri: song.uri, service: song.service }
+        end
+      params = { playlist_items: { songs: song_params } }
+      post "/api/v1/playlists/#{playlist.id}/playlist_items",
+           headers: { "Authorization" => "Bearer #{AuthenticationTokenService.call(user2.id)}" },
+           params: params
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 

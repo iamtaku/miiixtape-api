@@ -1,12 +1,13 @@
 class Api::V1::PlaylistItemsController < ApplicationController
   def create
+    authorize playlist, policy_class: PlaylistItemPolicy
     new_playlist = PlaylistItem.create_multiple(playlist_items_params[:songs], playlist)
     render json: PlaylistSerializer.new(new_playlist).serializable_hash.to_json,
            status: :created
   end
 
   def update
-    authorize playlist_item
+    authorize playlist_item 
     if playlist_item.insert_at(position)
       render json: PlaylistItemSerializer
                .new(playlist_item)
@@ -53,4 +54,5 @@ class Api::V1::PlaylistItemsController < ApplicationController
   def playlist
     @playlist ||= Playlist.find(params[:playlist_id])
   end
+
 end

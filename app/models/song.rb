@@ -3,6 +3,8 @@ class Song < ApplicationRecord
   has_many :playlists, through: :playlist_items
   validates :name, :service, :uri, presence: true
   validates :uri, uniqueness: true
+  validates :name, format: { without: /private video/i,
+    message: "only allows non private videos" }
 
   def self.find_or_create_by_uri(item)
     song = Song.find_by uri: item["uri"]
