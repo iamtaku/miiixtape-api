@@ -28,8 +28,7 @@ module SpotifyManager
       auth_response =
         HTTParty.post("https://accounts.spotify.com/api/token", options)
 
-      # convert response.body to json for assisgnment
-      p JSON.parse(auth_response.body)
+      JSON.parse(auth_response.body)
     end
   end
 
@@ -39,7 +38,6 @@ module SpotifyManager
       user_response =
         HTTParty.get("https://api.spotify.com/v1/me", { headers: header })
 
-      # convert response.body to json for assisgnment
       JSON.parse(user_response.body)
     end
   end

@@ -1,14 +1,12 @@
 class Api::V1::UsersController < ApplicationController
   before_action :check_access
-  before_action :authenticate_user, only: [:index]
+  before_action :current_user, only: [:index]
 
   def create
-    render json: { token: AuthenticationTokenService.call(current_user.id) }
+    render json: { token: AuthenticationTokenService.call(spotify_user.id) }
   end
 
   def index
-    # byebug
-    # render spotify tokens for user if valid jwt
     if @user.token_expired?
       token = SpotifyManager::RefreshToken.call(@user.refresh_token)
       @user.update(access_token: token)
@@ -34,4 +32,5 @@ class Api::V1::UsersController < ApplicationController
       redirect_to "http://localhost:3001/error"
     end
   end
+
 end
