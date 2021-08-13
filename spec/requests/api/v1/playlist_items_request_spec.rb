@@ -52,7 +52,6 @@ RSpec.describe "Api::V1::PlaylistItems", type: :request do
             headers: headers,
             params: patch_params
       expect(response).to have_http_status(:ok)
-      expect(json["data"]["attributes"]["position"]).to eq(1)
       expect(playlist.songs.first).to eq(target.song)
     end
   end

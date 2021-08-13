@@ -3,7 +3,7 @@ class User < ApplicationRecord
   validates :spotify_id, uniqueness: true
 
   def token_expired?
-    (Time.now - updated_at) > 3300
+    (Time.now - updated_at) > 3500
   end
 
   private
