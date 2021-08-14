@@ -1,5 +1,4 @@
 class Api::V1::PlaylistsController < ApplicationController
-  # after_action :skip_authorization, only: :show
 
   def index
     @playlists = current_user.playlists.all.sort_by(&:created_at)
