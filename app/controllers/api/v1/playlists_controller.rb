@@ -6,8 +6,6 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def show
-    options = {}
-    options[:include] = [:playlist_items]
     render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
   end
 
