@@ -1,7 +1,7 @@
 class Api::V1::PlaylistsController < ApplicationController
 
   def index
-    @playlists = current_user.playlists.all.sort_by(&:created_at)
+    @playlists = current_user.playlists.all.sort_by(&:position)
     render json: PlaylistSerializer.new(@playlists).serializable_hash.to_json
   end
 

@@ -71,6 +71,7 @@ RSpec.describe "Api::V1::Playlists", type: :request do
      updated_params = { playlist: { name: updated_name, user_id: user.id, position: 0 } }
       patch "/api/v1/playlists/#{target.id}", headers: headers, params: updated_params
       expect(user.playlists.first).to eq(target)
+      expect(JSON.parse(response.body)["data"]["attributes"]["position"]).to eq(0)
     end
 
     it "fails when id is wrong" do
