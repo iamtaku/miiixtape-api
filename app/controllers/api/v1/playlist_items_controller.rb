@@ -1,8 +1,10 @@
 class Api::V1::PlaylistItemsController < ApplicationController
   def create
     authorize playlist, policy_class: PlaylistItemPolicy
+    options = {}
+    options[:include] = [:playlist_items]
     new_playlist = PlaylistItem.create_multiple(playlist_items_params[:songs], playlist)
-    render json: PlaylistSerializer.new(new_playlist).serializable_hash.to_json,
+    render json: PlaylistSerializer.new(new_playlist, options).serializable_hash.to_json,
            status: :created
   end
 
