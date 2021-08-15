@@ -8,7 +8,6 @@ class Api::V1::PlaylistItemsController < ApplicationController
 
   def update
     authorize playlist_item 
-    # byebug
     if playlist_item.insert_at(position + 1)
     options = {}
     options[:include] = [:playlist_items]
