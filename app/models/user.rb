@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :playlists
+  has_many :playlists, -> { order(position: :asc) }
   validates :spotify_id, uniqueness: true
 
   def token_expired?
