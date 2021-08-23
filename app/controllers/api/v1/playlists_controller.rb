@@ -2,7 +2,7 @@ class Api::V1::PlaylistsController < ApplicationController
 
   def index
     @playlists = current_user.playlists.all.sort_by(&:position)
-    render json: PlaylistSerializer.new(@playlists).serializable_hash.to_json
+    render json: PlaylistSerializer.new(@playlists, options).serializable_hash.to_json
   end
 
   def show
@@ -26,7 +26,7 @@ class Api::V1::PlaylistsController < ApplicationController
   def update
     authorize playlist
     if playlist.update(playlist_params)
-      render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
+      render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json,
              status: :ok
     else
       render json: {
