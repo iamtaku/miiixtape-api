@@ -1,14 +1,11 @@
 class Api::V1::PlaylistsController < ApplicationController
-  # after_action :skip_authorization, only: :show
 
   def index
-    @playlists = current_user.playlists.all.sort_by(&:created_at)
-    render json: PlaylistSerializer.new(@playlists).serializable_hash.to_json
+    @playlists = current_user.playlists.all.sort_by(&:position)
+    render json: PlaylistSerializer.new(@playlists, options).serializable_hash.to_json
   end
 
   def show
-    options = {}
-    options[:include] = [:playlist_items]
     render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
   end
 
@@ -29,7 +26,7 @@ class Api::V1::PlaylistsController < ApplicationController
   def update
     authorize playlist
     if playlist.update(playlist_params)
-      render json: PlaylistSerializer.new(playlist).serializable_hash.to_json,
+      render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json,
              status: :ok
     else
       render json: {
@@ -54,6 +51,6 @@ class Api::V1::PlaylistsController < ApplicationController
   private
 
   def playlist_params
-    params.require(:playlist).permit(:name)
+    params.require(:playlist).permit(:name, :position, :editable)
   end
 end

@@ -52,8 +52,9 @@ RSpec.describe "Api::V1::PlaylistItems", type: :request do
             headers: headers,
             params: patch_params
       expect(response).to have_http_status(:ok)
-      expect(playlist.songs.first).to eq(target.song)
+      expect(playlist.songs.second).to eq(target.song)
     end
+    
   end
 
   describe "DELETE /items" do

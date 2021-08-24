@@ -45,4 +45,10 @@ class ApplicationController < ActionController::API
     render json: { error: "You are not authorized for this action"}, status: :unauthorized
   end
 
+  def options
+    options = {}
+    options[:include] = [:playlist_items]
+    options
+  end
+
 end

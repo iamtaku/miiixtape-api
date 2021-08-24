@@ -53,7 +53,7 @@ RSpec.describe "Api::V1::Playlists", type: :request do
   describe "PATCH /playlists" do
     it "updates a playlist" do
       updated_name = "updated name"
-      updated_params = { playlist: { name: updated_name, user_id: user.id } }
+      updated_params = { playlist: { name: updated_name, user_id: user.id, editable: true} }
       patch "/api/v1/playlists/#{playlist.id}",
             headers: headers,
             params: updated_params
@@ -61,12 +61,24 @@ RSpec.describe "Api::V1::Playlists", type: :request do
       expect(JSON.parse(response.body)["data"]["attributes"]["name"]).to eq(
         updated_name
       )
+      expect(JSON.parse(response.body)["data"]["attributes"]["editable"]).to eq(true)
+    end
+
+    it "update position when position is given" do
+     3.times { create(:playlist, user: user)}
+     target = Playlist.last
+      updated_name = "updated name"
+     updated_params = { playlist: { name: updated_name, user_id: user.id, position: 0 } }
+      patch "/api/v1/playlists/#{target.id}", headers: headers, params: updated_params
+      expect(user.playlists.first).to eq(target)
+      expect(JSON.parse(response.body)["data"]["attributes"]["position"]).to eq(0)
     end
 
     it "fails when id is wrong" do
       patch "/api/v1/playlists/#{playlist.id}1", headers: headers
       expect(response).to have_http_status(:not_found)
     end
+    
   end
 
   describe "DELETE /playlists" do
