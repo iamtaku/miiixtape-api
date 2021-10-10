@@ -1,11 +1,13 @@
 class Api::V1::PlaylistsController < ApplicationController
-
   def index
     @playlists = current_user.playlists.all.sort_by(&:position)
     render json: PlaylistSerializer.new(@playlists, options).serializable_hash.to_json
   end
 
   def show
+   # client = Rspotify.new
+   # client.authenticate(ENV["SPOTIFY_ID"], ENV["SPOTIFY_CLIENT_SECRET"])
+   # playlist = client::Playlist.find_by_id(playlist.id)
     render json: PlaylistSerializer.new(playlist, options).serializable_hash.to_json
   end
 
@@ -18,8 +20,7 @@ class Api::V1::PlaylistsController < ApplicationController
     else
       render json: {
                error: playlist.errors.messages,
-             },
-             status: :unprocessable_entity
+             }, status: :unprocessable_entity
     end
   end
 
@@ -42,7 +43,7 @@ class Api::V1::PlaylistsController < ApplicationController
       head :no_content
     else
       render json: {
-               error: playlist.errors.messages,
+                     error: playlist.errors.messages
              },
              status: :unprocessable_entity
     end

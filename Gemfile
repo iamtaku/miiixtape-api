@@ -31,6 +31,7 @@ gem 'jsonapi-serializer'
 gem 'jwt'
 gem 'prettier'
 gem 'pundit'
+gem 'rspotify'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

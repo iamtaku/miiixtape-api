@@ -7,9 +7,9 @@ class Api::V1::PlaylistItemsController < ApplicationController
   end
 
   def update
-    authorize playlist_item 
+    authorize playlist_item
     if playlist_item.insert_at(position)
-    render json: PlaylistSerializer.new(playlist_item.playlist, options).serializable_hash.to_json,
+      render json: PlaylistSerializer.new(playlist_item.playlist, options).serializable_hash.to_json,
              status: :ok
     else
       render status: :unprocessable_entity
@@ -51,5 +51,4 @@ class Api::V1::PlaylistItemsController < ApplicationController
   def playlist
     @playlist ||= Playlist.find(params[:playlist_id])
   end
-
 end

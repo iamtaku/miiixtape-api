@@ -11,13 +11,12 @@ class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token
   include Pundit
 
-
   private
 
   def playlist
     @playlist ||= Playlist.find(params[:id])
   end
-  
+
   def handle_parameter_missing(exception)
     render json: { error: exception.message }, status: :bad_request
   end
@@ -25,7 +24,7 @@ class ApplicationController < ActionController::API
   def spotify_user
     @spotify_user ||= User.find_or_create_spotify(params)
   end
-  
+
   def current_user
     token, _options = token_and_options(request)
     # return nil if token.nil?
@@ -34,15 +33,15 @@ class ApplicationController < ActionController::API
   end
 
   def authentication_error
-    render json: {error: "token gone wrong "}, status: :unauthorized
+    render json: { error: "token gone wrong " }, status: :unauthorized
   end
 
   def not_found
     render json: { error: "user not found" }, status: :not_found
   end
-  
+
   def user_not_authorized
-    render json: { error: "You are not authorized for this action"}, status: :unauthorized
+    render json: { error: "You are not authorized for this action" }, status: :unauthorized
   end
 
   def options
@@ -50,5 +49,4 @@ class ApplicationController < ActionController::API
     options[:include] = [:playlist_items]
     options
   end
-
 end
